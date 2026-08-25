@@ -189,6 +189,23 @@ Set the five Stripe env vars under Settings → Environment Variables for Produc
 (and Preview if you want to test there). Env var changes don't apply to existing
 deployments — redeploy after adding them, or every size stays sold out.
 
+### If the URL 404s
+
+A 404 with `NOT_FOUND` and no styling is Vercel's, not this app's — the request
+never reached the deployment. Three causes, in the order they bit us:
+
+1. **Production Branch points at a branch that doesn't exist.** Settings → Git.
+   If it says `main` and the repo has no `main`, no production deployment can
+   ever be created, so the production URL has nothing behind it. Pushes land as
+   previews instead — that's the tell.
+2. **The project is paused.** Settings → General → Pause Project. A paused
+   project stops serving its production domains and returns exactly this 404,
+   while preview URLs keep working and the dashboard still shows a healthy
+   READY deployment. Nothing you push fixes it.
+3. **The alias never attached.** A production deployment built *while* the
+   project was paused keeps its alias list but the alias isn't live. After
+   unpausing, push again or hit Redeploy — the alias binds at deploy time.
+
 Two settings to check on the project, both under Settings:
 
 - **Deployment Protection → Vercel Authentication.** If this is on, every

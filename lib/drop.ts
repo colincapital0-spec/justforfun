@@ -161,38 +161,35 @@ export type MediaSlot = {
   width: number
   height: number
   /** Which stand-in to draw while src is null. */
-  placeholder: 'back' | 'front' | 'detail'
+  placeholder: 'back' | 'front'
   /** Small caption under the slot. */
   caption: string
 }
 
-export const media: Record<'hero' | 'front' | 'detail', MediaSlot> = {
+export const media: Record<'hero' | 'front', MediaSlot> = {
   hero: {
     id: 'back',
-    src: null, // e.g. '/product/runback-back.jpg'
+    // Upload to /public/product/ with exactly this name and the photo appears.
+    src: '/product/back.png',
     alt: `Back of the ${product.name}, hand-lettered discharge print reading "${product.lyric}"`,
-    width: 1200,
-    height: 1500,
+    // Landscape, roughly 3:2 — measured off the shot itself. If the file you
+    // upload has different pixel dimensions, put the real ones here: this pair
+    // is what holds the space while the image decodes, and a mismatch means
+    // either layout shift or an unintended crop (the slot uses object-cover).
+    width: 1512,
+    height: 1024,
     placeholder: 'back',
     caption: 'Back print — discharge, natural white',
   },
   front: {
     id: 'front',
-    src: null, // e.g. '/product/runback-front.jpg'
-    alt: `Front of the ${product.name}, embroidered BKCHAPO wordmark on the left chest`,
-    width: 1200,
-    height: 1500,
+    src: '/product/front.png',
+    alt: `Front of the ${product.name}, hand-lettered BKCHAPO mark on the wearer's left chest`,
+    // Square.
+    width: 1244,
+    height: 1244,
     placeholder: 'front',
-    caption: 'Front — embroidered chest',
-  },
-  detail: {
-    id: 'detail',
-    src: null, // e.g. '/product/runback-detail.jpg'
-    alt: 'Close detail of the embroidered BKCHAPO wordmark',
-    width: 1200,
-    height: 900,
-    placeholder: 'detail',
-    caption: 'Chest detail',
+    caption: 'Front — chest mark',
   },
 }
 

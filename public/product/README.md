@@ -1,14 +1,17 @@
 # Product photos
 
-Empty until the sample is shot. Until then the page draws the garment instead —
-see `components/ProductSlot.tsx`.
+Two files, named exactly:
 
-Drop the files here, then set `src`, `width` and `height` on each slot in
-`lib/drop.ts`:
+    back.png    the back print, landscape (~3:2)
+    front.png   the front chest mark, square (1:1)
 
-    runback-back.jpg     back print, full width          portrait 4:5
-    runback-front.jpg    front, embroidered chest        portrait 4:5
-    runback-detail.jpg   close on the chest embroidery   landscape 4:3
+`lib/drop.ts` already points at `/product/back.png` and `/product/front.png`.
+Drop the files in here and they appear — nothing else to change.
 
-`width`/`height` must match the file's real pixel dimensions — they're what hold
-the space while the image decodes.
+If your files have different pixel dimensions than the `width`/`height` in
+`lib/drop.ts`, update those numbers to match. They're what reserve the space
+while the image decodes; a mismatch means either layout shift or an
+unintended crop, since the slots use `object-cover`.
+
+Until the files exist, each slot draws the garment instead and carries a
+visible `[ product photo — sample not shot ]` caption.

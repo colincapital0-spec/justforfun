@@ -73,27 +73,6 @@ function TeeSilhouette({ view }: { view: MediaSlot['placeholder'] }) {
   )
 }
 
-function DetailPlaceholder() {
-  return (
-    <div className="flex h-full w-full items-center justify-center bg-char">
-      <div className="text-center">
-        <div className="font-sans text-[clamp(1rem,4vw,1.6rem)] font-bold tracking-[0.42em] text-thread">
-          BKCHAPO
-        </div>
-        {/* Stitch line — the mark is embroidered, not printed. */}
-        <div
-          className="mx-auto mt-3 h-px w-full max-w-[14rem]"
-          style={{
-            backgroundImage:
-              'repeating-linear-gradient(90deg, var(--color-thread) 0 5px, transparent 5px 10px)',
-            opacity: 0.45,
-          }}
-        />
-      </div>
-    </div>
-  )
-}
-
 export function ProductSlot({
   slot,
   priority = false,
@@ -126,12 +105,6 @@ export function ProductSlot({
         ) : (
           <>
             <TeeSilhouette view={slot.placeholder} />
-
-            {slot.placeholder === 'detail' ? (
-              <div className="absolute inset-0">
-                <DetailPlaceholder />
-              </div>
-            ) : null}
 
             {slot.placeholder === 'back' ? (
               // The print, where it actually sits on the garment.

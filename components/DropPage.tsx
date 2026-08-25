@@ -212,13 +212,9 @@ export default async function DropPage({
             <div className="md:grid md:grid-cols-12 md:gap-10">
               <Rail n="01">The garment</Rail>
               <div className="mt-8 md:col-span-9 md:mt-0">
-                <div className="grid gap-10 sm:grid-cols-2">
-                  <ProductSlot slot={media.front} sizes="(min-width: 768px) 34vw, 92vw" />
-                  <ProductSlot
-                    slot={media.detail}
-                    sizes="(min-width: 768px) 34vw, 92vw"
-                    className="sm:mt-16"
-                  />
+                {/* Two shots exist: the back carries the hero, the front sits here. */}
+                <div className="max-w-[34rem]">
+                  <ProductSlot slot={media.front} sizes="(min-width: 768px) 40vw, 92vw" />
                 </div>
 
                 <dl className="mt-16 border-t border-line">

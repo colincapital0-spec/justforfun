@@ -1,0 +1,342 @@
+@import 'tailwindcss';
+
+/* ═════════════════════════════════════════════════════════════════════════
+   PALETTE
+
+   The garment decides the palette. The print is discharge ink, which doesn't
+   lay white pigment down — it strips the dye out of the cotton and lets the
+   undyed fibre come back through, so the "white" on this page is a warm
+   natural, #EDE9E0, and never #FFFFFF.
+
+   ACCENT — one only, --thread, #C9873F.
+   Chosen because it's the only colour actually on the garment that isn't
+   black or discharge-natural: the chest embroidery. It's a brass/marigold
+   cotton thread. Two consequences that make it the right pick rather than a
+   decorative one: it sits at the same warm temperature as the ink, so nothing
+   on the page ever goes cool and the two non-black tones read as one material
+   family; and at 6.6:1 on --void it clears WCAG AA as real text, so the
+   deadline can be set in it without dropping contrast. It appears in exactly
+   three places — the deadline figure, the selected size chip, and the buy
+   button's live edge. Nowhere else. No gradients anywhere on this page.
+
+   Contrast against --void (#0A0A0A):
+     --ink      16.4:1   AAA
+     --ink-dim   5.8:1   AA
+     --thread    6.6:1   AA
+     --ghost     —       decorative, aria-hidden, never carries meaning
+   ═════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  --color-void: #0a0a0a;
+  --color-char: #141210;
+  --color-line: #2a2622;
+  --color-ink: #ede9e0;
+  --color-ink-dim: #8f8a80;
+  --color-thread: #c9873f;
+  --color-ghost: #171412;
+
+  /* Big Shoulders Display — American condensed gothic out of Chicago signage.
+     The gig-flyer and fight-poster register, not the Anton/Bebas default. */
+  --font-display: var(--font-big-shoulders), 'Oswald', 'Arial Narrow', sans-serif;
+  /* Archivo — same American-gothic ancestry, so it looks related to the
+     display face without looking like the same family, and it holds at 13px. */
+  --font-sans: var(--font-archivo), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+
+html {
+  background-color: var(--color-void);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background-color: var(--color-thread);
+  color: var(--color-void);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-thread);
+  outline-offset: 3px;
+}
+
+/* ── Grain ──────────────────────────────────────────────────────────────────
+   One static fractal-noise tile over the whole page. It does not move; there
+   is nothing here for reduced-motion to switch off. */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Background marquee ─────────────────────────────────────────────────────
+   Two opposing bands of huge, very low contrast type. A drop-site convention
+   done straight: constant speed, one axis, seamless. It never drifts, never
+   bounces, and it is always behind an opaque panel wherever a CTA sits. */
+
+.marquee-band {
+  overflow: hidden;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-left var(--marquee-duration, 90s) linear infinite;
+}
+
+.marquee-track[data-dir='right'] {
+  animation-name: marquee-right;
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ── Page-load reveal ───────────────────────────────────────────────────────
+   One orchestrated hero entrance, staggered by --d. Deliberately CSS: a
+   marquee and a single stagger do not justify shipping an animation runtime.
+
+   The animation is what makes .reveal visible, and it is set to run only
+   inside this @media block. Any environment that reports reduced motion —
+   including one where animations never run at all — falls through to the
+   static rule below and gets fully opaque content. Nothing can end up
+   stranded at opacity 0. */
+
+.reveal {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    animation: reveal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--d, 0ms);
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   SIZE → BUY LINK, WITH NO JAVASCRIPT
+
+   The size selector is a native radio group, so arrow keys, roving focus and
+   form semantics come free. The buy control is not one element whose href
+   gets rewritten — it is a stack of one <span> (nothing selected: genuinely
+   inert, not a disabled-looking anchor) plus one real <a> per available size,
+   and CSS shows exactly one of them.
+
+   :has() on the wrapping .drop-root element means this works before hydration
+   and with JavaScript switched off entirely. The same rules drive the sticky
+   bar, which lives inside the same wrapper — one source of truth for the
+   selected size, no mirrored state to fall out of sync.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+.buy-slot > [data-buy] {
+  display: none;
+}
+
+.buy-slot > [data-buy='none'] {
+  display: flex;
+}
+
+.drop-root:has(#size-s:checked) .buy-slot > [data-buy='none'],
+.drop-root:has(#size-m:checked) .buy-slot > [data-buy='none'],
+.drop-root:has(#size-l:checked) .buy-slot > [data-buy='none'],
+.drop-root:has(#size-xl:checked) .buy-slot > [data-buy='none'],
+.drop-root:has(#size-2xl:checked) .buy-slot > [data-buy='none'] {
+  display: none;
+}
+
+.drop-root:has(#size-s:checked) .buy-slot > [data-buy='s'],
+.drop-root:has(#size-m:checked) .buy-slot > [data-buy='m'],
+.drop-root:has(#size-l:checked) .buy-slot > [data-buy='l'],
+.drop-root:has(#size-xl:checked) .buy-slot > [data-buy='xl'],
+.drop-root:has(#size-2xl:checked) .buy-slot > [data-buy='2xl'] {
+  display: flex;
+}
+
+/* Anything that should disappear once a size is picked (the "pick a size" hint). */
+.drop-root:has(input[name='size']:checked) .until-sized {
+  display: none;
+}
+
+/* ── Size chips ─────────────────────────────────────────────────────────── */
+
+.size-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.size-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Five sizes have to sit on one row at 390px — a wrapped 2XL on its own
+     line reads like an afterthought. Flexible width, capped by the group. */
+  flex: 1 1 0;
+  min-width: 3rem;
+  min-height: 3.25rem;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--color-line);
+  background-color: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    border-color 90ms linear,
+    color 90ms linear,
+    background-color 90ms linear,
+    transform 90ms linear;
+}
+
+@media (hover: hover) {
+  .size-chip:hover {
+    border-color: var(--color-ink-dim);
+  }
+}
+
+.size-input:checked + .size-chip {
+  border-color: var(--color-thread);
+  color: var(--color-thread);
+}
+
+.size-input:focus-visible + .size-chip {
+  outline: 2px solid var(--color-thread);
+  outline-offset: 2px;
+}
+
+.size-input:disabled + .size-chip {
+  color: var(--color-ink-dim);
+  border-color: var(--color-line);
+  cursor: not-allowed;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* ── Physical press ─────────────────────────────────────────────────────── */
+
+.press {
+  transition:
+    transform 90ms linear,
+    background-color 90ms linear,
+    border-color 90ms linear,
+    color 90ms linear;
+}
+
+.press:active {
+  transform: translateY(1px);
+}
+
+/* ── Sticky buy bar ─────────────────────────────────────────────────────── */
+
+.sticky-bar {
+  transform: translateY(110%);
+  transition:
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 260ms linear;
+  opacity: 0;
+}
+
+.sticky-bar[data-shown='true'] {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── Reduced motion: non-negotiable ─────────────────────────────────────────
+   The marquee stops (the type stays, static and still decorative), the reveal
+   is already handled above by never arming, the press transform is dropped,
+   and the sticky bar snaps instead of sliding. Everything on the page stays
+   fully usable and fully visible. */
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .marquee-track[data-dir='right'] {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .press:active {
+    transform: none;
+  }
+
+  .sticky-bar {
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Hand-lettered lyric ────────────────────────────────────────────────────
+   Per-character transforms are inline (deterministic, index-seeded — see
+   components/HandLettered.tsx). The roughening filter is applied here so it
+   can be dropped on low-end devices without touching the markup. */
+
+.hand-letter {
+  display: inline-block;
+  transform-origin: 50% 80%;
+}
+
+.hand-rough-text {
+  filter: url(#hand-rough-text);
+}
+
+.hand-rough-display {
+  filter: url(#hand-rough-display);
+}

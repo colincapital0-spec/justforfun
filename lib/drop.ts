@@ -205,7 +205,7 @@ export const copy = {
   hero: {
     kicker: 'MADEBYBK',
     releaseTag: 'PRE-ORDER',
-    lead: 'A line from Cabbage on "Run Back", printed across the back of a heavyweight black tee.',
+    lead: 'A line from Bkchapo & Cabbage on "Run Back", printed across the back of a heavyweight black tee.',
     sub: 'Two weeks to order. I print what sells and nothing past that.',
     cta: 'Pre-order',
   },

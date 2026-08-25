@@ -109,7 +109,7 @@ export function Confirmed({ size, session }: { size?: string; session?: string }
           className="block font-display text-[clamp(1.4rem,6vw,3rem)] leading-[0.94] font-bold text-ink/70"
         />
         <Link
-          href="/runback"
+          href="/"
           className="press mt-8 inline-flex min-h-[3rem] items-center border border-line px-6 font-display text-[1.1rem] font-bold tracking-[0.14em] text-ink uppercase hover:border-thread hover:text-thread"
         >
           {copy.confirmed.back}

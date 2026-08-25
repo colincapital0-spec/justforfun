@@ -1,7 +1,10 @@
 # RUN BACK — drop site
 
-A standalone pre-order page for the RUN BACK TEE. Ships to `madebybk.com/runback`.
-Not a catalog product, not linked from the nav.
+A one-page site for the RUN BACK TEE pre-order — merch for the album, standing on
+its own, not a section of another site.
+
+The page is served at both `/` and `/runback`, so whichever URL ends up in a video
+description or a bio resolves.
 
 Next.js (App Router) + TypeScript + Tailwind. No database, no backend, no payment
 code. Stripe Payment Links do checkout; the Stripe dashboard is the admin.
@@ -9,7 +12,7 @@ code. Stripe Payment Links do checkout; the Stripe dashboard is the admin.
 ```bash
 npm install
 cp .env.example .env.local     # then paste your five Payment Links in
-npm run dev                    # http://localhost:3000/runback
+npm run dev                    # http://localhost:3000
 ```
 
 ---
@@ -29,6 +32,7 @@ launch and fill in what's missing:
 |---|---|---|
 | `[DATE]` | hero, buy block, step 02, sticky bar | set `closeDate` (below) |
 | `[EMAIL]` | footer, confirmation page | the inbox you want customers writing to |
+| `meta.url` is `null` | Open Graph tags | the domain, once you have one — link previews stay broken until it's set |
 | `[BLANK — brand and style]`, `[WEIGHT]` | garment spec | the blank you're printing on |
 | `[THREAD COLOR]` | chest spec | the embroidery thread |
 | `[HEIGHT]`, `[SIZE]` | fit note | model height and the size worn |
@@ -74,7 +78,7 @@ in the browser and every size silently goes "sold out".
 *Don't show a confirmation page* → redirect to your page, with the size baked in:
 
 ```
-https://madebybk.com/runback?ordered=1&size=m&session={CHECKOUT_SESSION_ID}
+https://YOUR-DOMAIN/?ordered=1&size=m&session={CHECKOUT_SESSION_ID}
 ```
 
 Change `size=` per link (`s`, `m`, `l`, `xl`, `2xl`). Stripe substitutes
@@ -145,11 +149,12 @@ while the image decodes, so get them right or you reintroduce layout shift. Upda
 
 ```
 lib/drop.ts              every fact, every string, every link
-app/runback/page.tsx     the page — hero, buy, spec, pre-order, song, footer
+components/DropPage.tsx  the page — hero, buy, spec, pre-order, song, footer
 app/globals.css          palette tokens, the no-JS buy switching, reduced motion
 components/              HandLettered, BackgroundMarquee, Grain, SizePicker,
                          BuyLinks, StickyBuyBar, ProductSlot, Confirmed
-app/page.tsx             / redirects to /runback
+app/page.tsx             mounts DropPage at /
+app/runback/page.tsx     mounts the same DropPage at /runback
 ```
 
 Three things worth knowing before you change them:
@@ -177,11 +182,21 @@ The palette and the accent choice are explained in a comment at the top of
 
 ## Deploying
 
-Vercel, framework preset Next.js, no special build settings. Set the five env vars
-for Production (and Preview if you want to test there). To serve it under
-`madebybk.com/runback`, either deploy this as its own project and rewrite that path
-to it from the main site, or copy `app/runback/`, `components/`, `lib/drop.ts` and
-the `@theme` block into the main app.
+Vercel, framework preset Next.js, no special build settings. Push to the repo's
+default branch and it deploys.
+
+Set the five Stripe env vars under Settings → Environment Variables for Production
+(and Preview if you want to test there). Env var changes don't apply to existing
+deployments — redeploy after adding them, or every size stays sold out.
+
+Two settings to check on the project, both under Settings:
+
+- **Deployment Protection → Vercel Authentication.** If this is on, every
+  `.vercel.app` URL asks visitors to log into Vercel first. It has to be off for a
+  link in a bio or a video description to work. Custom domains are exempt from it.
+- **Domains.** Add the domain and set it as production. Then put it in `meta.url`
+  in `lib/drop.ts` so link previews resolve, and update the Stripe Payment Links'
+  redirect URLs to match.
 
 ## Scripts
 

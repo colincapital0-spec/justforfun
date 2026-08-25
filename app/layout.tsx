@@ -29,18 +29,20 @@ const archivo = Archivo({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(meta.url),
+  // Absolute URLs for OG tags once the domain is set in lib/drop.ts; until
+  // then Next falls back to relative, which is correct-but-unpreviewable
+  // rather than confidently wrong.
+  metadataBase: meta.url ? new URL(meta.url) : undefined,
   title: meta.title,
   description: meta.description,
   openGraph: {
     title: meta.title,
     description: meta.description,
-    url: meta.url,
+    ...(meta.url ? { url: meta.url } : {}),
     type: 'website',
   },
   twitter: { card: 'summary_large_image', title: meta.title, description: meta.description },
-  // Standalone drop page: not in the catalog, not in the nav, but still indexable
-  // so the link in a video description resolves properly when shared.
+  // Its own site, one page. Indexable so a shared link previews and resolves.
   robots: { index: true, follow: true },
 }
 

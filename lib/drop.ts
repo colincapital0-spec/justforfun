@@ -321,5 +321,10 @@ export const marqueeWords = ['MADEBYBK', 'JUSTFORFUN'] as const
 export const meta = {
   title: `${product.name} — Bkchapo`,
   description: `Limited pre-order. "${product.lyric}" — a line from Cabbage on "Run Back", discharge printed on heavyweight black cotton. Closes ${DATE_PLACEHOLDER === closeDateLong() ? 'soon' : closeDateLong()}.`,
-  url: 'https://madebybk.com/runback',
+  /**
+   * The domain this site lands on. Set it before launch — Open Graph tags need
+   * an absolute URL, so link previews in Instagram, iMessage and Discord stay
+   * broken until this is real. Left null rather than filled with a guess.
+   */
+  url: null as string | null,
 } as const

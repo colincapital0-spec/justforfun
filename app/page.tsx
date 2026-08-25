@@ -1,10 +1,7 @@
-import { redirect } from 'next/navigation'
+import DropPage from '@/components/DropPage'
 
 /**
- * The drop lives at /runback so it can be dropped into madebybk.com under that
- * path. If this ever gets deployed on its own domain, the root still lands
- * people on the page instead of a 404.
+ * The drop at the root of its own domain. `/runback` renders the same page, so
+ * either URL works wherever the link was already shared.
  */
-export default function Root() {
-  redirect('/runback')
-}
+export default DropPage

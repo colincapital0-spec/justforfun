@@ -310,8 +310,8 @@ export const copy = {
   footer: {
     /** Bracketed until you tell me which inbox to use. */
     email: '[EMAIL]',
-    site: 'madebybk.com',
-    siteHref: 'https://madebybk.com',
+    site: 'madebybk.xyz',
+    siteHref: 'https://madebybk.xyz',
   },
 } as const
 

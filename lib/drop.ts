@@ -184,7 +184,7 @@ export const media: Record<'hero' | 'front', MediaSlot> = {
   front: {
     id: 'front',
     src: '/product/front.png',
-    alt: `Front of the ${product.name}, hand-lettered BKCHAPO mark on the wearer's left chest`,
+    alt: `Front of the ${product.name}, embroidered BKCHAPO® mark on the wearer's left chest`,
     // Square.
     width: 1244,
     height: 1244,

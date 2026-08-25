@@ -64,7 +64,7 @@ function TeeSilhouette({ view }: { view: MediaSlot['placeholder'] }) {
             letterSpacing="2.4"
             fontWeight="700"
           >
-            BKCHAPO
+            BKCHAPO®
           </text>
           <path d="M214 158h68" stroke="var(--color-thread)" strokeWidth="0.75" opacity="0.35" strokeDasharray="2 3" />
         </>

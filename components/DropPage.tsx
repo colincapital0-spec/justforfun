@@ -149,9 +149,20 @@ export default async function DropPage({
                 </div>
               </div>
 
-              {/* The shirt sits lower-right and overlaps the type's column. */}
-              <div className="reveal mt-14 md:col-start-8 md:col-end-13 md:row-start-1 md:mt-[15rem]" style={{ ['--d' as string]: '320ms' }}>
-                <ProductSlot slot={media.hero} priority sizes="(min-width: 768px) 42vw, 92vw" />
+              {/* The shot is landscape, so it needs width to read as the hero
+                  rather than a thumbnail — seven columns, hanging off the right
+                  edge. It sits in the grid's second row rather than behind the
+                  type: the photo's ground is pale concrete, and the headline
+                  set in --ink over that is barely legible. Row 2 starts
+                  wherever the type stops, so this holds at every width instead
+                  of needing a hand-tuned top margin per breakpoint. The
+                  negative pull raises it beside the lead copy, which is narrow
+                  enough (38ch) to stay clear of this column. */}
+              <div
+                className="reveal mt-14 md:col-start-6 md:col-end-13 md:row-start-2 md:-mt-[14rem] md:-mr-[3vw]"
+                style={{ ['--d' as string]: '320ms' }}
+              >
+                <ProductSlot slot={media.hero} priority sizes="(min-width: 768px) 58vw, 92vw" />
               </div>
             </div>
           </section>

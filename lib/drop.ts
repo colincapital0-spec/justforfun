@@ -172,12 +172,11 @@ export const media: Record<'hero' | 'front', MediaSlot> = {
     // Upload to /public/product/ with exactly this name and the photo appears.
     src: '/product/back.png',
     alt: `Back of the ${product.name}, hand-lettered discharge print reading "${product.lyric}"`,
-    // Landscape, roughly 3:2 — measured off the shot itself. If the file you
-    // upload has different pixel dimensions, put the real ones here: this pair
-    // is what holds the space while the image decodes, and a mismatch means
-    // either layout shift or an unintended crop (the slot uses object-cover).
-    width: 1512,
-    height: 1024,
+    // Exact pixel dimensions of the file. This pair is what holds the space
+    // while the image decodes; a mismatch means layout shift, or a crop, since
+    // the slot uses object-cover.
+    width: 1537,
+    height: 1023,
     placeholder: 'back',
     caption: 'Back print — discharge, natural white',
   },
@@ -185,9 +184,8 @@ export const media: Record<'hero' | 'front', MediaSlot> = {
     id: 'front',
     src: '/product/front.png',
     alt: `Front of the ${product.name}, embroidered BKCHAPO® mark on the wearer's left chest`,
-    // Square.
-    width: 1244,
-    height: 1244,
+    width: 1254,
+    height: 1254,
     placeholder: 'front',
     caption: 'Front — chest mark',
   },
